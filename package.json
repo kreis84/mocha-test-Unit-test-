@@ -4,9 +4,11 @@
     "test:coverage": "nyc npm test",
     "test:nyan": "npm test -- --reporter nyan",
     "demo": "nyc node demo.js",
-    "success": "cowsay 'gra gitara!'"
+    "success": "cowsay 'gra gitara!'",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "dependencies": {
+    "codecov": "^3.5.0",
     "cowsay": "^1.4.0",
     "lolcat": "^1.0.0",
     "mocha": "^6.2.0",
