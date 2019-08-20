@@ -17,6 +17,7 @@ describe('Memoize decorator', () => {
   })
 
   it('should call the wrapped function after memoized function was called', () => {
+    // anonymous SPY
     const spy = sinon.spy()
     const memoizedSquare = memoize(spy)
 
@@ -33,4 +34,25 @@ describe('Memoize decorator', () => {
     sinon.assert.calledOnce(spy)
   })
 
+  it('should only call wrapped function once if called with the same parameters multiple times', () => {
+    const square = (n) => n**2
+    // spying existing function
+    const spy = sinon.spy(square)
+    const memoizedSquare = memoize(spy)
+
+    sinon.assert.notCalled(spy)
+
+    const result1 = memoizedSquare(5)
+    const result2 = memoizedSquare(5)
+    const result3 = memoizedSquare(5)
+
+    sinon.assert.calledOnce(spy)
+    sinon.assert.alwaysCalledWithExactly(spy, 5)
+
+    result1.should.equal(25)
+    result2.should.equal(25)
+    result3.should.equal(25)
+  })
+
+  // spying method object
 })
