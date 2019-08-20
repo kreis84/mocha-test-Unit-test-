@@ -2,6 +2,7 @@
   "scripts": {
     "test": "mocha test",
     "test:coverage": "nyc npm test",
+    "test:nyan": "npm test -- --reporter nyan",
     "demo": "nyc node demo.js",
     "success": "cowsay 'gra gitara!'"
   },
