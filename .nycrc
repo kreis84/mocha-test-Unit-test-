@@ -1,0 +1,6 @@
+{
+  "reporter": ["text", "html"],
+  "check-coverage": true,
+  "lines": 60,
+  "functions": 100
+}
