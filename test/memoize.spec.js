@@ -2,6 +2,7 @@ const { memoize } = require('../src/utils')
 
 const chai = require('chai')
 chai.should()
+const expect = chai.expect
 const assert = chai.assert
 
 const sinon = require('sinon')
@@ -9,6 +10,12 @@ const sinon = require('sinon')
 const { Calculator } = require('../src/calc')
 
 describe('Memoize decorator', () => {
+
+  // it('unique exists', () => {
+  //   memoize.should.not.be.undefined
+  //   expect(memoize).not.to.be.undefined
+  // })
+
   it('should return the same result as the wrapped function', () => {
     const square = (n) => n**2
     const memoizedSquare = memoize(square)
@@ -80,14 +87,38 @@ describe('Memoize decorator', () => {
     result5.should.equal(3)
     sinon.assert.calledWith(spy, 1, 2)
     sinon.assert.calledWith(spy, 4, 5)
+  })
 
-    // const concat = (arr1, arr2) => arr1.concat(arr2)
-    // const memoizedConcat = memoize(concat)
-    // const result6 = memoizedConcat([], [1, 2]) // -> [1,2]
-    // const result7 = memoizedConcat([], [1, 2])
+  const concat = (arr1, arr2) => arr1.concat(arr2)
 
-    // sinon.assert.threw(spy)
-    // sinon.assert.threw(spy())
+  it('should call wrapped function twice for different array parameters', () => {
+    const spy = sinon.spy(concat)
+    const memoizedConcat = memoize(spy)
+    const result1 = memoizedConcat([1, 2], [3, 4])
+    const result2 = memoizedConcat([2, 3], [4, 5])
 
+    sinon.assert.calledTwice(spy)
+  })
+
+  it('should call wrapped function twice for different object parameters', () => {
+    const spy = sinon.spy(concat)
+    const memoizedConcat = memoize(spy)
+    const result1 = memoizedConcat([{ value: 1 }], [{ value: 2 }])
+    const result2 = memoizedConcat([{ value: 2 }], [{ value: 3 }])
+
+    sinon.assert.calledTwice(spy)
+  })
+  
+  it('should throw if wrapped function is called with another function as parameter', () => {
+    const memoizedConcat = memoize(concat)
+    const spy = sinon.spy(memoizedConcat)
+    const f1 = () => {}, f2 = () => {}
+    try {
+      // expected to throw
+      const result1 = spy(f1, f2)
+    } catch {}
+
+    sinon.assert.threw(spy)
+    sinon.assert.calledOnce(spy)
   })
 })
