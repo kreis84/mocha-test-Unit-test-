@@ -47,10 +47,10 @@ describe('API HTTP Requests', () => {
    */
 
   it('should merge geo and office data', async () => {
-    const response = await fetchGeoWithOffices()
+    const response = await fetchGeoWithOffices() 
     expect(typeof response).to.equal("object")
     expect(typeof response.US).to.equal("object")
     expect(response.US.country).to.equal("United States of America")
-    expect(response.US.offices.length).to.equal(3)
+    expect(response.US.offices.length).to.equal(3) 
   })
 })

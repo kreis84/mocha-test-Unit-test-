@@ -29,7 +29,24 @@ const fetchGeoWithOffices = async () => {
   const geo = await geoReq
   const offices = await officesReq
 
-  // processing
+  const grouped = offices.reduce((acc, o) => {
+    if (!acc[o.country]) {
+      acc[o.country] = []
+    }
+    acc[o.country].push(o)
+    return acc
+  }, {})
+
+  const result = Object.entries(geo)
+    .reduce((acc, [code, country]) => {
+      acc[code] = {
+        country,
+        offices: grouped[country]
+      }
+      return acc
+    }, {})
+  
+  return result
 }
 
 module.exports = {
