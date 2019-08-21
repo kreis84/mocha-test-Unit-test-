@@ -39,6 +39,7 @@ const cachePromise = (promiseFn) => {
     if(!req){
       req = promiseFn()
     }
+    req.catch(() => req = undefined)
     return req
   }
 }
