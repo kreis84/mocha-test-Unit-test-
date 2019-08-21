@@ -1,5 +1,9 @@
+const chalk = require('chalk')
+
+
 const Calculator = {
   add(a, b){
+    // console.trace()
     return a + b;
   },
   sub(a, b){

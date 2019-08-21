@@ -49,14 +49,18 @@ describe('API HTTP Requests', () => {
         DE: "Germany",
       })
 
-      fetchMock.get(`${baseURL}/offices`, [
-        { country: "Poland" },
-        { country: "Czech" },
-        { country: "Czech" },
-        { country: "Poland" },
-        { country: "Poland" },
-        { country: "Germany" },
-      ])
+      fetchMock.get(`${baseURL}/offices`, {
+        body: [
+          { country: "Poland" },
+          { country: "Czech" },
+          { country: "Czech" },
+          { country: "Poland" },
+          { country: "Poland" },
+          { country: "Germany" },
+        ],
+        // status: 200
+        // throws: new TypeError('Dups.')
+      })
     })
 
     after(() => {
@@ -85,6 +89,7 @@ describe('API HTTP Requests', () => {
           ]
         },
       })
+
       // expect(typeof response).to.equal("object")
       // expect(typeof response.PL).to.equal("object") 
       // expect(response.PL.country).to.equal("Poland")

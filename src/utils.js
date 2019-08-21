@@ -32,7 +32,19 @@ const memoize = (wrappedFn) => {
   }
 }
 
+// promiseFn: () => Promise<X>
+const cachePromise = (promiseFn) => {
+  let req
+  return () => {
+    if(!req){
+      req = promiseFn()
+    }
+    return req
+  }
+}
+
 module.exports = {
   unique,
   memoize,
+  cachePromise,
 }
