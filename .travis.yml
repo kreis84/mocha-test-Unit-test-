@@ -4,7 +4,7 @@ install:
   - npm i
   - npm i -g codecov
 script:
-  - npm run test:coverage
+  - nyc npm run test:no-integration
 node_js:
   # - '4'
   - '6'

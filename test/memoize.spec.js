@@ -17,7 +17,7 @@ describe('Memoize decorator', () => {
   // })
 
   it('should return the same result as the wrapped function', () => {
-    const square = (n) => n**2
+    const square = (n) => n*n
     const memoizedSquare = memoize(square)
 
     const rawResult = square(5)
