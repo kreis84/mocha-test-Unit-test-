@@ -1,4 +1,7 @@
-const { fetchGeo, fetchOffices, fetchGeoWithOffices } = require('../src/api')
+const chalk = require('chalk')
+const fetchMock = require('fetch-mock')
+
+const { fetchGeo, fetchOffices, fetchGeoWithOffices, baseURL } = require('../src/api')
 
 const chai = require('chai')
 const expect = chai.expect
@@ -36,21 +39,57 @@ describe('API HTTP Requests', () => {
     },
     ...
   }
-
-  [
-    { countryCode: "US",
-      countryName: "United States of America",
-      offices: [{off1}, { off2}]
-    },
-    ...
-  ]
    */
 
-  it('should merge geo and office data', async () => {
-    const response = await fetchGeoWithOffices() 
-    expect(typeof response).to.equal("object")
-    expect(typeof response.US).to.equal("object")
-    expect(response.US.country).to.equal("United States of America")
-    expect(response.US.offices.length).to.equal(3) 
-  })
+  describe('mocked HTTP calls', () => {
+    before(() => {
+      fetchMock.get(`${baseURL}/geo`, {
+        PL: "Poland",
+        CZ: "Czech",
+        DE: "Germany",
+      })
+
+      fetchMock.get(`${baseURL}/offices`, [
+        { country: "Poland" },
+        { country: "Czech" },
+        { country: "Czech" },
+        { country: "Poland" },
+        { country: "Poland" },
+        { country: "Germany" },
+      ])
+    })
+
+    after(() => {
+      fetchMock.restore()
+    })
+     
+    it('should merge geo and office data', async () => {
+      const response = await fetchGeoWithOffices()
+      expect(response).to.deep.equal({
+        PL: {
+          country: "Poland", offices: [
+            { country: "Poland" },
+            { country: "Poland" },
+            { country: "Poland" }
+          ]
+        },
+        CZ: {
+          country: "Czech", offices: [
+            { country: "Czech" },
+            { country: "Czech" },
+          ]
+        },
+        DE: {
+          country: "Germany", offices: [
+            { country: "Germany" },
+          ]
+        },
+      })
+      // expect(typeof response).to.equal("object")
+      // expect(typeof response.PL).to.equal("object") 
+      // expect(response.PL.country).to.equal("Poland")
+      // expect(response.PL.offices.length).to.equal(3)
+    })
+     
+   })
 })

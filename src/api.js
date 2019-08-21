@@ -50,6 +50,7 @@ const fetchGeoWithOffices = async () => {
 }
 
 module.exports = {
+  baseURL,
   fetchGeo,
   fetchOffices,
   fetchGeoWithOffices,
