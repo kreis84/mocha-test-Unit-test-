@@ -1,3 +1,5 @@
+const axios = require('axios')
+
 const baseURL = 'http://localhost:3000'
 
 // DON'T DO THIS:
@@ -13,6 +15,14 @@ const fetchGeo = () =>
 const fetchOffices = () =>
   fetch(`${baseURL}/offices`)
     .then(res => res.json())
+
+const axiosGeo = () =>
+  axios.get(`${baseURL}/geo`)
+    .then(res => res.data)
+
+const axiosOffices = () =>
+  axios.get(`${baseURL}/offices`)
+    .then(res => res.data)
 
 const fetchGeoWithOffices = async () => {
   // SEQ - ok, but unnecessarily slow
@@ -54,4 +64,6 @@ module.exports = {
   fetchGeo,
   fetchOffices,
   fetchGeoWithOffices,
+  axiosGeo,
+  axiosOffices,
 }

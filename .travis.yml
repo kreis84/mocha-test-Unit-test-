@@ -7,7 +7,7 @@ script:
   - nyc npm run test:no-integration
 node_js:
   # - '4'
-  - '6'
+  # - '6'
   - '8'
   - '10'
   - '12'

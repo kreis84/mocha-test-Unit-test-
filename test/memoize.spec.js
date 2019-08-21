@@ -116,7 +116,8 @@ describe('Memoize decorator', () => {
     try {
       // expected to throw
       const result1 = spy(f1, f2)
-    } catch {}
+    } catch (err) {
+    }
 
     sinon.assert.threw(spy)
     sinon.assert.calledOnce(spy)

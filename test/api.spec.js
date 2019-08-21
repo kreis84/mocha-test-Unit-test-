@@ -1,7 +1,19 @@
 const chalk = require('chalk')
 const fetchMock = require('fetch-mock')
 
-const { fetchGeo, fetchOffices, fetchGeoWithOffices, baseURL } = require('../src/api')
+// fetch is a javascript global (in the browser)
+// axios is not
+// fetch can be mocked using: global.fetch = MOCK
+// axios cannot be
+const axios = require('axios')
+const MockAdapter = require('axios-mock-adapter')
+const mock = new MockAdapter(axios)
+
+const {
+  fetchGeo, fetchOffices, fetchGeoWithOffices,
+  axiosGeo, axiosOffices,
+  baseURL,
+} = require('../src/api')
 
 const chai = require('chai')
 const expect = chai.expect
@@ -41,7 +53,7 @@ describe('API HTTP Requests', () => {
   }
    */
 
-  describe('mocked HTTP calls', () => {
+  describe('fetch-mock HTTP calls', () => {
     before(() => {
       fetchMock.get(`${baseURL}/geo`, {
         PL: "Poland",
@@ -95,6 +107,36 @@ describe('API HTTP Requests', () => {
       // expect(response.PL.country).to.equal("Poland")
       // expect(response.PL.offices.length).to.equal(3)
     })
-     
-   })
+  })
+
+  describe('axios-mock-adapter HTTP calls', () => {
+    before(() => {
+      mock.onGet(`${baseURL}/geo`).reply(200, {
+        result: 123
+      })
+    })
+
+    after(() => {
+      mock.restore()
+    })
+
+    const httpCalledNTimes = (url, method, n, msg) => {
+      const allCalls = mock.history[method]
+      const calls = allCalls.filter(call => call.url.includes(url))
+      const pass = calls.length === n
+      if (!pass){
+        if (!msg) {
+          msg = `Expected ${n} calls to HTTP ${method.toUpperCase()} ${url}, got: ${calls.length}`
+        }
+        throw new Error(msg)
+      }
+    }
+
+    it('should mock axios /geo call', async () => {
+      const res = await axiosGeo()
+      expect(res).to.deep.equal({ result: 123 })
+      // called once:
+      httpCalledNTimes(`${baseURL}/geo`, 'get', 1)
+    })
+  })
 })
