@@ -1,6 +1,8 @@
 {
   "scripts": {
     "test": "mocha test",
+    "test:only-integration": "npm run test -- --grep integration",
+    "test:no-integration": "npm run test -- --grep integration --invert",
     "test:coverage": "nyc npm test",
     "test:coverage:watch": "nyc npm test -- --watch",
     "test:nyan": "npm test -- --reporter nyan",
